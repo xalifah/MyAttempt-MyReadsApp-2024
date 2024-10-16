@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const SearchBar = ({ onSearch, query, showOnShelf, onToggleShowOnShelf }) => {
+  const debouncedSearch = useCallback(
+    (value) => {
+      const timeoutId = setTimeout(() => {
+        onSearch(value);
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
+    },
+    [onSearch]
+  );
+
+  useEffect(() => {
+    return debouncedSearch(query);
+  }, [query, debouncedSearch]);
+
   const handleChange = (event) => {
-    const newQuery = event.target.value;
-    onSearch(newQuery);
+    onSearch(event.target.value);
   };
 
   return (
     <div className="search-books-bar">
       {/* Link back to the main page */}
-      <Link to="/" className="close-search">Close</Link>
+      <Link to="/" className="close-search">
+        Close
+      </Link>
       <div className="search-books-input-wrapper">
         {/* Input field for search query */}
         <input
