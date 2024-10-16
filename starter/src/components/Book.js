@@ -1,10 +1,8 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import BookshelfChanger from "./BookshelfChanger";
 
-const Book = ({ book, shelf, onMove, isSearchResult = false }) => {
-  // Determine if the book is on a shelf or not
-  const isOnShelf = shelf !== "none";
-
+const Book = ({ book, onMove, isSearchResult }) => {
   return (
     <li>
       <div className="book">
@@ -13,32 +11,45 @@ const Book = ({ book, shelf, onMove, isSearchResult = false }) => {
             className="book-cover"
             style={{
               backgroundImage: `url("${
-                // Use the book's thumbnail image if available, otherwise use an empty string
                 book.imageLinks ? book.imageLinks.thumbnail : ""
               }")`,
             }}
           >
-            {/* Display "On Shelf" indicator for search results that are already on a shelf */}
-            {isSearchResult && isOnShelf && (
+            {isSearchResult && book.shelf !== "none" && (
               <div className="book-on-shelf-indicator">On Shelf</div>
             )}
           </div>
           <BookshelfChanger 
             book={book} 
-            shelf={shelf} 
             onMove={onMove} 
-            isOnShelf={isOnShelf}
             isSearchResult={isSearchResult}
           />
         </div>
         <div className="book-title">{book.title}</div>
         <div className="book-authors">
-          {/* Display authors if available, otherwise show "Unknown Author" */}
           {book.authors ? book.authors.join(", ") : "Unknown Author"}
         </div>
       </div>
     </li>
   );
+};
+
+Book.propTypes = {
+  book: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.arrayOf(PropTypes.string),
+    imageLinks: PropTypes.shape({
+      thumbnail: PropTypes.string
+    }),
+    shelf: PropTypes.string.isRequired
+  }).isRequired,
+  onMove: PropTypes.func.isRequired,
+  isSearchResult: PropTypes.bool
+};
+
+Book.defaultProps = {
+  isSearchResult: false
 };
 
 export default Book;

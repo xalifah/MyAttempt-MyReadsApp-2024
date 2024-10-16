@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import Book from "./Book";
 
 const Bookshelf = ({ shelf, books, onMove }) => {
@@ -8,19 +9,25 @@ const Bookshelf = ({ shelf, books, onMove }) => {
       <div className="bookshelf-books">
         <ol className="books-grid">
           {books.map(book => (
-            <li key={book.id}>
-              {/* Render individual Book component for each book */}
-              <Book 
-                book={book} 
-                shelf={shelf.key} 
-                onMove={onMove} 
-              />
-            </li>
+            <Book 
+              key={book.id}
+              book={book} 
+              onMove={onMove} 
+            />
           ))}
         </ol>
       </div>
     </div>
   );
+};
+
+Bookshelf.propTypes = {
+  shelf: PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  }).isRequired,
+  books: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onMove: PropTypes.func.isRequired
 };
 
 // Bookshelf component represents a single shelf of books

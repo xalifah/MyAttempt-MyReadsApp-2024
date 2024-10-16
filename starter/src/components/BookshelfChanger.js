@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+import "../styles/BookshelfChanger.css";
 
-const BookshelfChanger = ({ book, shelf, onMove, isOnShelf, isSearchResult }) => {
+const BookshelfChanger = ({ book, onMove, isSearchResult }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleChange = (newShelf) => {
@@ -8,30 +10,31 @@ const BookshelfChanger = ({ book, shelf, onMove, isOnShelf, isSearchResult }) =>
     setIsOpen(false);
   };
 
-  // If the book is already on a shelf and this is a search result, don't render the changer
-  if (isSearchResult && isOnShelf) {
-    return null;
-  }
-
-  // Define options for the dropdown
   const options = [
     { value: "currentlyReading", label: "Reading Now" },
     { value: "wantToRead", label: "Want to Read" },
     { value: "read", label: "Read" },
-    // Only include the 'Remove' option if it's not a search result
-    ...(isSearchResult ? [] : [{ value: "none", label: "Remove", className: "remove-option" }])
+    { value: "none", label: "None", className: "remove-option" },
   ];
 
   return (
     <div className="book-shelf-changer">
       <div className="select-wrapper" onClick={() => setIsOpen(!isOpen)}>
-        <div className="select-value"></div>
-        <div className={`select-options ${isOpen ? 'open' : ''}`}>
-          {options.map(option => (
-            <div 
-              key={option.value} 
-              className={`option ${option.className || ''}`}
-              onClick={() => handleChange(option.value)}
+        <div className="select-value">
+          {options.find((opt) => opt.value === book.shelf)?.label ||
+            "Move to..."}
+        </div>
+        <div className={`select-options ${isOpen ? "open" : ""}`}>
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className={`option ${option.className || ""} ${
+                book.shelf === option.value ? "selected" : ""
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleChange(option.value);
+              }}
             >
               {option.label}
             </div>
@@ -40,6 +43,19 @@ const BookshelfChanger = ({ book, shelf, onMove, isOnShelf, isSearchResult }) =>
       </div>
     </div>
   );
+};
+
+BookshelfChanger.propTypes = {
+  book: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    shelf: PropTypes.string.isRequired,
+  }).isRequired,
+  onMove: PropTypes.func.isRequired,
+  isSearchResult: PropTypes.bool,
+};
+
+BookshelfChanger.defaultProps = {
+  isSearchResult: false,
 };
 
 export default BookshelfChanger;
