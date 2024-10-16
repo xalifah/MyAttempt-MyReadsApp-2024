@@ -92,3 +92,46 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+
+# MyReads: A Book Tracking App
+
+## Installation and Launch Instructions
+
+1. Clone the repository:
+
+   ```
+   git clone https://github.com/your-username/myreads-app.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```
+   cd myreads-app/starter
+   ```
+
+3. Install the dependencies:
+
+   ```
+   npm install
+   ```
+
+4. Start the development server:
+
+   ```
+   npm start
+   ```
+
+5. Open your browser and visit `http://localhost:3000` to view the app.
+
+## Features
+
+- View your book shelves: "Currently Reading", "Want to Read", and "Read"
+- Move books between shelves
+- Search for new books to add to your shelves
+- View detailed information about each book
+
+## API Methods
+
+The following API methods are used in this application:
+
+[Include existing API method documentation here]

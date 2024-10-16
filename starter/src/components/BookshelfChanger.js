@@ -1,46 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import "../styles/BookshelfChanger.css";
 
-const BookshelfChanger = ({ book, onMove, isSearchResult }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleChange = (newShelf) => {
-    onMove(book, newShelf);
-    setIsOpen(false);
+const BookshelfChanger = ({ book, onMove, isBookDetails }) => {
+  const handleChange = (event) => {
+    onMove(book, event.target.value);
   };
 
-  const options = [
-    { value: "currentlyReading", label: "Reading Now" },
-    { value: "wantToRead", label: "Want to Read" },
-    { value: "read", label: "Read" },
-    { value: "none", label: "None", className: "remove-option" },
+  const shelves = [
+    { key: "move", name: "Move to...", disabled: true },
+    { key: "currentlyReading", name: "Currently Reading" },
+    { key: "wantToRead", name: "Want to Read" },
+    { key: "read", name: "Read" },
+    { key: "none", name: "None" },
   ];
 
   return (
-    <div className="book-shelf-changer">
-      <div className="select-wrapper" onClick={() => setIsOpen(!isOpen)}>
-        <div className="select-value">
-          {options.find((opt) => opt.value === book.shelf)?.label ||
-            "Move to..."}
-        </div>
-        <div className={`select-options ${isOpen ? "open" : ""}`}>
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={`option ${option.className || ""} ${
-                book.shelf === option.value ? "selected" : ""
-              }`}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleChange(option.value);
-              }}
-            >
-              {option.label}
-            </div>
-          ))}
-        </div>
-      </div>
+    <div
+      className={`book-shelf-changer ${
+        isBookDetails ? "book-details-changer" : ""
+      }`}
+    >
+      <select value={book.shelf} onChange={handleChange}>
+        {shelves.map((shelf) => (
+          <option key={shelf.key} value={shelf.key} disabled={shelf.disabled}>
+            {shelf.name}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
@@ -51,11 +37,7 @@ BookshelfChanger.propTypes = {
     shelf: PropTypes.string.isRequired,
   }).isRequired,
   onMove: PropTypes.func.isRequired,
-  isSearchResult: PropTypes.bool,
-};
-
-BookshelfChanger.defaultProps = {
-  isSearchResult: false,
+  isBookDetails: PropTypes.bool,
 };
 
 export default BookshelfChanger;

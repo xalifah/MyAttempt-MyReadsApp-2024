@@ -1,27 +1,32 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import BookshelfChanger from "./BookshelfChanger";
+import { Link } from "react-router-dom";
 
 const Book = ({ book, onMove, isSearchResult }) => {
+  const isOnShelf = book.shelf && book.shelf !== "none";
+
   return (
     <li>
       <div className="book">
         <div className="book-top">
-          <div
-            className="book-cover"
-            style={{
-              backgroundImage: `url("${
-                book.imageLinks ? book.imageLinks.thumbnail : ""
-              }")`,
-            }}
-          >
-            {isSearchResult && book.shelf !== "none" && (
-              <div className="book-on-shelf-indicator">On Shelf</div>
-            )}
-          </div>
-          <BookshelfChanger 
-            book={book} 
-            onMove={onMove} 
+          <Link to={`/book/${book.id}`} className="book-cover-link">
+            <div
+              className="book-cover"
+              style={{
+                backgroundImage: `url("${
+                  book.imageLinks ? book.imageLinks.thumbnail : ""
+                }")`,
+              }}
+            >
+              {isSearchResult && isOnShelf && (
+                <div className="book-shelf-indicator">On Shelf</div>
+              )}
+            </div>
+          </Link>
+          <BookshelfChanger
+            book={book}
+            onMove={onMove}
             isSearchResult={isSearchResult}
           />
         </div>
@@ -35,21 +40,9 @@ const Book = ({ book, onMove, isSearchResult }) => {
 };
 
 Book.propTypes = {
-  book: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    authors: PropTypes.arrayOf(PropTypes.string),
-    imageLinks: PropTypes.shape({
-      thumbnail: PropTypes.string
-    }),
-    shelf: PropTypes.string.isRequired
-  }).isRequired,
+  book: PropTypes.object.isRequired,
   onMove: PropTypes.func.isRequired,
-  isSearchResult: PropTypes.bool
-};
-
-Book.defaultProps = {
-  isSearchResult: false
+  isSearchResult: PropTypes.bool,
 };
 
 export default Book;
